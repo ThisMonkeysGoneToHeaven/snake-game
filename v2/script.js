@@ -92,7 +92,6 @@ class SnakeNode {
 class Snake {
     constructor(snakeSize, stepSize, initialDirection){
         const newGridCell = randomGridCell(GRID_WIDTH_CELLS - snakeSize, GRID_HEIGHT_CELLS - snakeSize);
-        console.log('random new grid cell: ', newGridCell);
         this.head = new SnakeNode(newGridCell.x, newGridCell.y);
         this.tail = this.head;
         this.length = 1;
