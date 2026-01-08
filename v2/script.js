@@ -101,6 +101,48 @@ class Snake {
         this.direction = initialDirection;
     }
 
+    tick(shouldGrow){
+        // compute new head position
+        let newX = this.head.x;
+        let newY = this.head.y;
+
+        switch(this.direction){
+            case DIR_UP:
+                newY -= this.stepsize;
+                break;
+            case DIR_DOWN:
+                newY += this.stepsize;
+                break;
+            case DIR_LEFT:
+                newX -= this.stepsize;
+                break;
+            case DIR_RIGHT:
+                newX += this.stepsize;
+                break;
+        }
+
+        // making sure snake never leaves the grade
+        newX = newX % GRID_WIDTH_CELLS;
+        newY = newY % GRID_HEIGHT_CELLS;
+
+        // add new head to the snake
+        const newHead = new SnakeNode(newX, newY);
+        newHead.next = this.head;
+        this.head = newHead;
+        this.length++;
+
+        // remove tail unless the snake is supposed to grow
+        if(!shouldGrow){
+            const curr = this.head;
+            while(curr.next !== this.tail){
+                curr = curr.next;
+            }
+            this.tail = curr;
+            curr.next = null;
+            this.length--;
+        }
+    }
+
     getNodes(){
         const nodes = [];
         let curr = this.head;
@@ -137,6 +179,7 @@ class GameLoop {
     }
     
     update(){
+        this.gameState.snake.tick(false);
     }
 
     render(){
