@@ -7,16 +7,16 @@ const DIR_RIGHT = 1;
 // LOGICAL SIZES : These are fixed and exist independent of the visual representation
 const SNAKE_STEP = 1;
 const FOOD_CELL_SIZE = 1;
-const SNAKE_CELL_SIZE = 1;
+const SNAKE_CELL_SIZE = 3;
 const GRID_WIDTH_CELLS = 100;
-const GRID_HEIGHT_CELLS = 100;
+const GRID_HEIGHT_CELLS = 50;
 
 // VISUAL RULES
 const CELL_SIZE_PX = 5;
-const FRAME_DELAY = 60;
+const FRAME_DELAY = 100;
 const FOOD_COLOR = 'red';
 const SNAKE_COLOR = 'black';
-const CANVAS_BG_COLOR = 'yellow';
+const CANVAS_BG_COLOR = 'beige';
 
 /* 
     GraphicsEngine - EXECUTOR : Handles drawing mechanisms
@@ -55,9 +55,13 @@ class Renderer {
     composeFrame(gameState){
         const drawCommands = [];
 
-        // snake nodes
+        // snake blobs
+        const snakeNodes = gameState.snake.getNodes();
+        for(let node of snakeNodes){
+            drawCommands.push(new DrawCommand(node.x * CELL_SIZE_PX, node.y * CELL_SIZE_PX, SNAKE_CELL_SIZE * CELL_SIZE_PX,  SNAKE_CELL_SIZE * CELL_SIZE_PX, SNAKE_COLOR));
+        }
 
-        // drawing food
+        // food blob
 
         return drawCommands;
     }
@@ -86,13 +90,26 @@ class SnakeNode {
 }
 
 class Snake {
-    constructor(){
-        this.head = new SnakeNode(0, 0);
+    constructor(snakeSize, stepSize, initialDirection){
+        const newGridCell = randomGridCell(GRID_WIDTH_CELLS - snakeSize, GRID_HEIGHT_CELLS - snakeSize);
+        console.log('random new grid cell: ', newGridCell);
+        this.head = new SnakeNode(newGridCell.x, newGridCell.y);
         this.tail = this.head;
         this.length = 1;
-        this.size = SNAKE_CELL_SIZE;
-        this.stepsize = SNAKE_STEP;
-        this.direction = DIR_RIGHT; // initial direction
+        this.size = snakeSize;
+        this.stepsize = stepSize;
+        this.direction = initialDirection;
+    }
+
+    getNodes(){
+        const nodes = [];
+        let curr = this.head;
+        // iterating the linked list
+        while(curr){
+            nodes.push({x: curr.x, y: curr.y});
+            curr = curr.next;
+        }
+        return nodes;
     }
 }
 
@@ -142,23 +159,24 @@ class GameLoop {
     }
 }
 
-// Derived Values
-const CANVAS_X = 10;
-const CANVAS_Y = 10;
-const CANVAS_WIDTH = GRID_HEIGHT_CELLS * CELL_SIZE_PX;
-const CANVAS_HEIGHT = GRID_WIDTH_CELLS * CELL_SIZE_PX;
+function randomGridCell(width, height){
+    return {
+        x: Math.floor(Math.random() * width),
+        y: Math.floor(Math.random() * height)
+    };
+}
 
-// INITIAL POSITIONS
-const SNAKE_INIT_X = (GRID_WIDTH_CELLS / 2) * CELL_SIZE_PX;
-const SNAKE_INIT_Y = (GRID_HEIGHT_CELLS / 2) * CELL_SIZE_PX;
+// Derived Values
+const CANVAS_WIDTH = GRID_WIDTH_CELLS * CELL_SIZE_PX;
+const CANVAS_HEIGHT = GRID_HEIGHT_CELLS * CELL_SIZE_PX;
 
 // Instantiate Game Entities
 const food = new Food();
-const snake = new Snake();
+const snake = new Snake(SNAKE_CELL_SIZE, SNAKE_STEP, DIR_RIGHT);
 const gameState = new GameState(snake, food);
-const surface = new DrawCommand(CANVAS_X, CANVAS_Y, CANVAS_WIDTH, CANVAS_HEIGHT, CANVAS_BG_COLOR);
+const surface = new DrawCommand(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT, CANVAS_BG_COLOR);
 const graphicsEngine = new GraphicsEngine(surface);
-const renderer = new Renderer(surface);
+const renderer = new Renderer();
 const gameLoop = new GameLoop(gameState, graphicsEngine, renderer);
 
 // start the game
