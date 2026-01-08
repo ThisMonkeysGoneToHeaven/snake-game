@@ -6,7 +6,7 @@ const DIR_RIGHT = 1;
 
 // LOGICAL SIZES : These are fixed and exist independent of the visual representation
 const SNAKE_STEP = 1;
-const FOOD_CELL_SIZE = 1;
+const FOOD_CELL_SIZE = 3;
 const SNAKE_CELL_SIZE = 3;
 const GRID_WIDTH_CELLS = 100;
 const GRID_HEIGHT_CELLS = 50;
@@ -62,6 +62,8 @@ class Renderer {
         }
 
         // food blob
+        const foodNode = gameState.food.getNode();
+        drawCommands.push(new DrawCommand(foodNode.x * CELL_SIZE_PX, foodNode.y * CELL_SIZE_PX, FOOD_CELL_SIZE * CELL_SIZE_PX, FOOD_CELL_SIZE * CELL_SIZE_PX, FOOD_COLOR));
 
         return drawCommands;
     }
@@ -156,6 +158,17 @@ class Snake {
 
 class Food {
     constructor(){
+        this.spawn();
+    }
+
+    spawn(){
+        const randomCell = randomGridCell(GRID_WIDTH_CELLS - FOOD_CELL_SIZE, GRID_HEIGHT_CELLS - FOOD_CELL_SIZE);
+        this.x = randomCell.x;
+        this.y = randomCell.y;
+    }
+
+    getNode(){
+        return {x: this.x, y: this.y};
     }
 }
 
