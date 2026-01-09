@@ -13,8 +13,7 @@ Focus: core gameplay, zero ceremony.
 ### v2 — The “Do It Properly” Edition
 Refactored with real structure:
 - Proper classes
-- Cleaner architecture
-- Less “it works, don’t touch it” energy
+- Solid architecture
 
 ---
 
@@ -28,22 +27,12 @@ Refactored with real structure:
 
 ---
 
-## Known Bugs 🐛
-
-- Self-collision detection sometimes fails  
-  - Especially when the snake wraps around the screen
-- Food occasionally spawns on top of the snake
-
----
-
 ## Current Issues
 
-- Snake head and food alignment feels slightly off
 - Performance can feel laggy at times
 
 ---
 
 ## Notes
 
-This is a work in progress.  
-Prototype first. Structure second. Polish last.
+This is a work in progress.
