@@ -134,7 +134,7 @@ class Snake {
 
         // remove tail unless the snake is supposed to grow
         if(!shouldGrow){
-            const curr = this.head;
+            let curr = this.head;
             while(curr.next !== this.tail){
                 curr = curr.next;
             }
