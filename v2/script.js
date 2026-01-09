@@ -181,6 +181,11 @@ class GameState {
         this.snake = snake;
         this.food = food;
     }
+
+    didSnakeEat(){
+        return checkOverlap(this.food.x, this.food.x + FOOD_CELL_SIZE, this.snake.head.x, this.snake.head.x + SNAKE_CELL_SIZE)
+        && checkOverlap(this.food.y, this.food.y + FOOD_CELL_SIZE, this.snake.head.y, this.snake.head.y + SNAKE_CELL_SIZE);
+    }
 }
 
 class GameLoop {
@@ -191,7 +196,10 @@ class GameLoop {
     }
     
     update(){
-        this.gameState.snake.tick(false);
+        const snakeAte = this.gameState.didSnakeEat();
+        this.gameState.snake.tick(snakeAte);
+        if(snakeAte)
+            this.gameState.food.spawn();
     }
 
     render(){
@@ -214,11 +222,19 @@ class GameLoop {
     }
 }
 
+// returns a cell from the (0, 0, width, height) grid
 function randomGridCell(width, height){
     return {
         x: Math.floor(Math.random() * width),
         y: Math.floor(Math.random() * height)
     };
+}
+
+// checks overlap of two line segments (x1, y1) & (x2, y2)
+function checkOverlap(x1, y1, x2, y2){
+    if(x2 > y1 || y2 < x1)
+        return false;
+    return true;
 }
 
 // Derived Values
