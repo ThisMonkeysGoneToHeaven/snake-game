@@ -5,7 +5,7 @@ const DIR_LEFT = 3;
 const DIR_RIGHT = 1;
 
 // LOGICAL SIZES : These are fixed and exist independent of the visual representation
-const SNAKE_STEP = 1;
+const SNAKE_STEP = 2;
 const FOOD_CELL_SIZE = 3;
 const SNAKE_CELL_SIZE = 3;
 const GRID_WIDTH_CELLS = 100;
@@ -144,6 +144,20 @@ class Snake {
         }
     }
 
+    changeDirection(newDirection) {
+        const opposites = {
+            [DIR_UP]: DIR_DOWN,
+            [DIR_DOWN]: DIR_UP,
+            [DIR_LEFT]: DIR_RIGHT,
+            [DIR_RIGHT]: DIR_LEFT
+        };
+
+        if (newDirection !== null &&
+            opposites[this.direction] !== newDirection) {
+            this.direction = newDirection;
+        }
+    }
+
     getNodes(){
         const nodes = [];
         let curr = this.head;
@@ -173,7 +187,29 @@ class Food {
 }
 
 class InputHandler {
+    constructor() {
+        this.pendingDirection = null;
 
+        document.addEventListener("keydown", (event) => {
+            const keyToDirection = {
+                ArrowUp: DIR_UP,
+                ArrowDown: DIR_DOWN,
+                ArrowLeft: DIR_LEFT,
+                ArrowRight: DIR_RIGHT,
+            };
+
+            const dir = keyToDirection[event.key];
+            if (dir !== undefined) {
+                this.pendingDirection = dir;
+            }
+        });
+    }
+
+    consumeDirection() {
+        const dir = this.pendingDirection;
+        this.pendingDirection = null;
+        return dir;
+    }
 }
 
 class GameState {
@@ -189,17 +225,20 @@ class GameState {
 }
 
 class GameLoop {
-    constructor(gameState, graphicsEngine, renderer){
+    constructor(gameState, graphicsEngine, renderer, inputHandler){
         this.graphicsEngine = graphicsEngine;
         this.gameState = gameState;
         this.renderer = renderer;
+        this.inputHandler = inputHandler;
     }
     
     update(){
         const snakeAte = this.gameState.didSnakeEat();
         this.gameState.snake.tick(snakeAte);
+        const newDirection = this.inputHandler.consumeDirection();
+        this.gameState.snake.changeDirection(newDirection);        
         if(snakeAte)
-            this.gameState.food.spawn();
+            this.gameState.food.spawn();        
     }
 
     render(){
@@ -248,7 +287,8 @@ const gameState = new GameState(snake, food);
 const surface = new DrawCommand(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT, CANVAS_BG_COLOR);
 const graphicsEngine = new GraphicsEngine(surface);
 const renderer = new Renderer();
-const gameLoop = new GameLoop(gameState, graphicsEngine, renderer);
+const inputHandler = new InputHandler();
+const gameLoop = new GameLoop(gameState, graphicsEngine, renderer, inputHandler);
 
 // start the game
 gameLoop.start()
