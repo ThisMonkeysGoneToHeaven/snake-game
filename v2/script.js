@@ -178,14 +178,9 @@ class Snake {
 }
 
 class Food {
-    constructor(){
-        this.spawn();
-    }
-
-    spawn(){
-        const randomCell = randomGridCell(GRID_WIDTH_CELLS - FOOD_CELL_SIZE, GRID_HEIGHT_CELLS - FOOD_CELL_SIZE);
-        this.x = randomCell.x;
-        this.y = randomCell.y;
+    setPosition(x, y){
+        this.x = x;
+        this.y = y;
     }
 
     getNode(){
@@ -241,6 +236,25 @@ class GameState {
         }
         return false;
     }
+
+    spawnFood(){
+        const snakeNodes = this.snake.getNodes(); // fetch current snake nodes
+        
+        let cell;
+        do {
+            cell = randomGridCell(GRID_WIDTH_CELLS - FOOD_CELL_SIZE, GRID_HEIGHT_CELLS - FOOD_CELL_SIZE);
+        } while(this.isCellOccupiedBySnake(cell, snakeNodes));
+
+        this.food.setPosition(cell.x, cell.y);
+    }
+
+    isCellOccupiedBySnake(cell, snakeNodes){
+        for(let node of snakeNodes){
+            if(node.x === cell.x && node.y === cell.y)
+                return true;
+        }
+        return false;
+    }
 }
 
 class GameLoop {
@@ -267,7 +281,7 @@ class GameLoop {
         }
         // 5. respawn food if eaten
         if(snakeAte)
-            this.gameState.food.spawn();        
+            this.gameState.spawnFood();        
     }
 
     render(){
