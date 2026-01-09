@@ -6,3 +6,5 @@ Things to add:
 -> pause
 -> levels - only speed initially but eventually maybe walls as well
 -> scorecard
+-> self collision failure
+-> food should never spawn over the snake
