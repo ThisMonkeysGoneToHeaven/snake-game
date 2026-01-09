@@ -1,17 +1,49 @@
-v1 - A quick prototype to get going
-v2 - proper classes and shit, how it's really meant to be done
+# 🐍 Snake Game
 
-Things to add:
+A classic snake game, built in stages—fast first, proper later.
 
--> pause
--> levels - only speed initially but eventually maybe walls as well
--> scorecard
+---
 
-Bugs:
--> still able to reproduce scenarios where self-collision remains undtected, especially when snake comes from across the
-other end of the surface
--> food still spawns over the snake at times
+## Versions
 
-Issues:
--> snake head and food alignment feels off
--> laggy???
+### v1 — Prototype
+A quick-and-dirty version to get things moving.  
+Focus: core gameplay, zero ceremony.
+
+### v2 — The “Do It Properly” Edition
+Refactored with real structure:
+- Proper classes
+- Cleaner architecture
+- Less “it works, don’t touch it” energy
+
+---
+
+## Planned Features
+
+- Pause
+- Levels  
+  - Initially: speed scaling  
+  - Eventually: walls and obstacles
+- Scorecard
+
+---
+
+## Known Bugs 🐛
+
+- Self-collision detection sometimes fails  
+  - Especially when the snake wraps around the screen
+- Food occasionally spawns on top of the snake
+
+---
+
+## Current Issues
+
+- Snake head and food alignment feels slightly off
+- Performance can feel laggy at times
+
+---
+
+## Notes
+
+This is a work in progress.  
+Prototype first. Structure second. Polish last.
