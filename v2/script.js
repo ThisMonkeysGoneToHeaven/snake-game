@@ -5,7 +5,7 @@ const DIR_LEFT = 3;
 const DIR_RIGHT = 1;
 
 // LOGICAL SIZES : These are fixed and exist independent of the visual representation
-const SNAKE_STEP = 2;
+const SNAKE_STEP = 3;
 const FOOD_CELL_SIZE = 3;
 const SNAKE_CELL_SIZE = 3;
 const GRID_WIDTH_CELLS = 100;
@@ -123,8 +123,8 @@ class Snake {
         }
 
         // making sure snake never leaves the grade
-        newX = newX % GRID_WIDTH_CELLS;
-        newY = newY % GRID_HEIGHT_CELLS;
+        newX = (newX + GRID_WIDTH_CELLS) % GRID_WIDTH_CELLS;
+        newY = (newY + GRID_HEIGHT_CELLS) % GRID_HEIGHT_CELLS;
 
         // add new head to the snake
         const newHead = new SnakeNode(newX, newY);
