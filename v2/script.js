@@ -122,7 +122,7 @@ class Snake {
                 break;
         }
 
-        // making sure snake never leaves the grade
+        // making sure snake never leaves the grid
         newX = (newX + GRID_WIDTH_CELLS) % GRID_WIDTH_CELLS;
         newY = (newY + GRID_HEIGHT_CELLS) % GRID_HEIGHT_CELLS;
 
