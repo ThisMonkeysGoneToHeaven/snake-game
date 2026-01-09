@@ -16,6 +16,7 @@ const CELL_SIZE_PX = 5;
 const FRAME_DELAY = 100;
 const FOOD_COLOR = 'red';
 const SNAKE_COLOR = 'black';
+const SNAKE_HEAD_COLOR = 'orange';
 const CANVAS_BG_COLOR = 'beige';
 
 /* 
@@ -57,7 +58,13 @@ class Renderer {
 
         // snake blobs
         const snakeNodes = gameState.snake.getNodes();
-        for(let node of snakeNodes){
+        for(let i = 0; i < snakeNodes.length; i++){
+            const node = snakeNodes[i];
+            if(i === 0){
+                // head node will have a different color for better visibility
+                drawCommands.push(new DrawCommand(node.x * CELL_SIZE_PX, node.y * CELL_SIZE_PX, SNAKE_CELL_SIZE * CELL_SIZE_PX,  SNAKE_CELL_SIZE * CELL_SIZE_PX, SNAKE_HEAD_COLOR));
+                continue;
+            }
             drawCommands.push(new DrawCommand(node.x * CELL_SIZE_PX, node.y * CELL_SIZE_PX, SNAKE_CELL_SIZE * CELL_SIZE_PX,  SNAKE_CELL_SIZE * CELL_SIZE_PX, SNAKE_COLOR));
         }
 
