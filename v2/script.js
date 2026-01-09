@@ -4,15 +4,15 @@ const DIR_DOWN = 2;
 const DIR_LEFT = 3;
 const DIR_RIGHT = 1;
 
-// LOGICAL SIZES : These are fixed and exist independent of the visual representation
-const SNAKE_STEP = 3;
-const FOOD_CELL_SIZE = 3;
-const SNAKE_CELL_SIZE = 3;
-const GRID_WIDTH_CELLS = 100;
-const GRID_HEIGHT_CELLS = 50;
+// LOGICAL SIZES : These are FIXED (not change) and exist independent of the visual representation
+const SNAKE_STEP = 1;
+const FOOD_CELL_SIZE = 1;
+const SNAKE_CELL_SIZE = 1;
+const GRID_WIDTH_CELLS = 30;
+const GRID_HEIGHT_CELLS = 20;
 
 // VISUAL RULES
-const CELL_SIZE_PX = 5;
+const CELL_SIZE_PX = 20;
 const FRAME_DELAY = 100;
 const FOOD_COLOR = 'red';
 const SNAKE_COLOR = 'black';
@@ -220,9 +220,13 @@ class GameState {
         this.food = food;
     }
 
-    didSnakeEat(){
+    _didSnakeEat(){
         return checkOverlap(this.food.x, this.food.x + FOOD_CELL_SIZE, this.snake.head.x, this.snake.head.x + SNAKE_CELL_SIZE)
         && checkOverlap(this.food.y, this.food.y + FOOD_CELL_SIZE, this.snake.head.y, this.snake.head.y + SNAKE_CELL_SIZE);
+    }
+
+    didSnakeEat(){
+        return this.food.x === this.snake.head.x && this.food.y === this.snake.head.y;
     }
 
     didSnakeHitItself(){
@@ -312,7 +316,7 @@ function randomGridCell(width, height){
     };
 }
 
-// checks overlap of two line segments (x1, y1) & (x2, y2)
+// checks overlap of two line segments (x1, y1) & (x2, y2) : NOT BEING USED CURRENTLY
 function checkOverlap(x1, y1, x2, y2){
     if(x2 > y1 || y2 < x1)
         return false;
@@ -327,6 +331,7 @@ const CANVAS_HEIGHT = GRID_HEIGHT_CELLS * CELL_SIZE_PX;
 const food = new Food();
 const snake = new Snake(SNAKE_CELL_SIZE, SNAKE_STEP, DIR_RIGHT);
 const gameState = new GameState(snake, food);
+gameState.spawnFood(); // spawn initial food
 const surface = new DrawCommand(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT, CANVAS_BG_COLOR);
 const graphicsEngine = new GraphicsEngine(surface);
 const renderer = new Renderer();
