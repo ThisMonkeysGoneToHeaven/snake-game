@@ -229,6 +229,18 @@ class GameState {
         return checkOverlap(this.food.x, this.food.x + FOOD_CELL_SIZE, this.snake.head.x, this.snake.head.x + SNAKE_CELL_SIZE)
         && checkOverlap(this.food.y, this.food.y + FOOD_CELL_SIZE, this.snake.head.y, this.snake.head.y + SNAKE_CELL_SIZE);
     }
+
+    didSnakeHitItself(){
+        const head = this.snake.head;
+        let curr = head.next;
+
+        while(curr){
+            if(curr.x === head.x && curr.y === head.y)
+                return true;
+            curr = curr.next;
+        }
+        return false;
+    }
 }
 
 class GameLoop {
@@ -240,10 +252,20 @@ class GameLoop {
     }
     
     update(){
+        // 1. check if snake ate food in the last tick
         const snakeAte = this.gameState.didSnakeEat();
+        // 2. advance the snake and adjust length accordingly
         this.gameState.snake.tick(snakeAte);
+        // 3. change snake direction based on input (if any)
         const newDirection = this.inputHandler.consumeDirection();
         this.gameState.snake.changeDirection(newDirection);        
+        // 4. check if snake hit itself
+        if(this.gameState.didSnakeHitItself()){
+            alert("GAME OVER!!");
+            window.location.reload();
+            return;
+        }
+        // 5. respawn food if eaten
         if(snakeAte)
             this.gameState.food.spawn();        
     }
